@@ -37,8 +37,7 @@ public class TTTankDriveOp extends OpMode {
          */
         robot = new TTRobot();
         robot.init(hardwareMap);
-        Larm_Pos= Servo.MIN_POSITION;
-        Rarm_Pos= Servo.MIN_POSITION;
+
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver. HW info follows.");
         telemetry.addData("motorinfo", "leftDrive(%s/%s/%d), rightDrive(%s/%s/%d)",

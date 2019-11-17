@@ -89,8 +89,8 @@ public class AutoV1 extends OpMode {
         if (state == OpState.START) {
             if ( time > state_start_time+1.0) {
                 setstate (OpState.Forward1);
-                robot.leftDrive.setDirection(DcMotor.Direction.FORWARD);
-                robot.rightDrive.setDirection(DcMotor.Direction.REVERSE);
+                robot.leftDrive.setDirection(DcMotor.Direction.REVERSE);
+                robot.rightDrive.setDirection(DcMotor.Direction.FORWARD);
                 robot.leftDrive.setTargetPosition(inch_to_enc_tick(27.25));
                 robot.rightDrive.setTargetPosition(inch_to_enc_tick(27.25));
                 robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -113,8 +113,8 @@ public class AutoV1 extends OpMode {
                 (robot.Rarm.getPosition() == Servo.MAX_POSITION)) {
                 setstate(OpState.PULL_FOUNDATION);
 
-                robot.leftDrive.setDirection(DcMotor.Direction.REVERSE);
-                robot.rightDrive.setDirection(DcMotor.Direction.FORWARD);
+                robot.leftDrive.setDirection(DcMotor.Direction.FORWARD);
+                robot.rightDrive.setDirection(DcMotor.Direction.REVERSE);
                 robot.leftDrive.setTargetPosition(inch_to_enc_tick(20.0));
                 robot.rightDrive.setTargetPosition(inch_to_enc_tick(20.0));
                 robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
