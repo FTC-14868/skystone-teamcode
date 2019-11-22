@@ -43,6 +43,7 @@ share your changes with the team.
 	a.	Fork the [FTC-14868 SkyStone teamcode](https://github.com/FTC-14868/skystone-teamcode)
         repository by clicking the **Fork** icon in the upper-right portion of the
 	    page (alongside **Watch** and **Star**).
+		
 	b.	Clone your fork using Git/GitHub into **TeamCode/src/main/java/org/firstinspires/ftc/**,
 		and make sure that the name of the directory is **teamcode**. The full directory
 		should be **.../TeamCode/src/main/java/org/firstinspires/ftc/teamcode**, and there
@@ -53,6 +54,7 @@ share your changes with the team.
 
 	a. Download the latest [skystone-teamcode](https://github.com/FTC-14868/skystone-teamcode/archive/master.zip)
 		source archive.
+		
 	b. Install it
 
 2.  Finally, in AndroidStudio, go to *File->Open* and find the path to your SkyStone
