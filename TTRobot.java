@@ -74,10 +74,10 @@ public class TTRobot {
         rightDrive.setPower(0);
         //hangArm.setPower(0);
         Larm.setDirection(Servo.Direction.FORWARD);
-        Larm.scaleRange(Servo.MIN_POSITION, Servo.MAX_POSITION*0.6);
+        Larm.scaleRange(Servo.MIN_POSITION, Servo.MAX_POSITION*0.75);
         Larm.setPosition(Servo.MIN_POSITION);
         Rarm.setDirection(Servo.Direction.REVERSE);
-        Rarm.scaleRange(Servo.MIN_POSITION, Servo.MAX_POSITION*0.6);
+        Rarm.scaleRange(Servo.MIN_POSITION, Servo.MAX_POSITION*0.75);
         Rarm.setPosition(Servo.MIN_POSITION);
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.

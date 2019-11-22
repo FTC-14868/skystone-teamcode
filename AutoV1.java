@@ -13,11 +13,13 @@ public class AutoV1 extends OpMode {
     int left_position, right_position;
     TTRobot robot;
     double state_start_time, c_time;
-    OpState state;
+    OpState state = OpState.START, nextstate = OpState.START;
+    boolean firstpass = true;
 
     public void setstate(OpState newstate){
-        state = newstate;
+        nextstate = newstate;
         state_start_time = time;
+        firstpass = true;
     }
 
     public int inch_to_enc_tick(double inch) {
@@ -59,6 +61,7 @@ public class AutoV1 extends OpMode {
                             robot.dSense.distanceOutOfRange,
                             robot.dSense.getDistance(DistanceUnit.METER));
                             */
+        state = nextstate;
     }
 
     /*
@@ -85,33 +88,47 @@ public class AutoV1 extends OpMode {
         double left;
         double right;
 
+        // next state is current state
+        nextstate = state;
 
         if (state == OpState.START) {
+            if (firstpass) firstpass = false;
+
             if ( time > state_start_time+1.0) {
                 setstate (OpState.Forward1);
+            }
+
+        } else if (state == OpState.Forward1) {
+            if (firstpass) {
+                firstpass = false;
                 robot.leftDrive.setDirection(DcMotor.Direction.REVERSE);
                 robot.rightDrive.setDirection(DcMotor.Direction.FORWARD);
-                robot.leftDrive.setTargetPosition(inch_to_enc_tick(27.25));
-                robot.rightDrive.setTargetPosition(inch_to_enc_tick(27.25));
+                robot.leftDrive.setTargetPosition(inch_to_enc_tick(30.5));
+                robot.rightDrive.setTargetPosition(inch_to_enc_tick(30.5));
                 robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 robot.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                left_power = right_power = 1.0;
             }
-        } else if (state == OpState.Forward1) {
-            left_power = right_power = 1.0;
             robot.leftDrive.setPower(left_power);
             robot.rightDrive.setPower(right_power);
 
             if ( !robot.leftDrive.isBusy() && !robot.rightDrive.isBusy()) {
+                setstate(OpState.ARM_DOWN1);
+            }
+        } else if (state == OpState.ARM_DOWN1) {
+            if (firstpass) {
+                firstpass = false;
                 robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                setstate(OpState.ARM_DOWN1);
                 robot.Larm.setPosition(Servo.MAX_POSITION);
                 robot.Rarm.setPosition(Servo.MAX_POSITION);
             }
-        } else if (state == OpState.ARM_DOWN1) {
-            if ((robot.Larm.getPosition() == Servo.MAX_POSITION) &&
-                (robot.Rarm.getPosition() == Servo.MAX_POSITION)) {
+            if (time > state_start_time+1.0) {
                 setstate(OpState.PULL_FOUNDATION);
+            }
+        } else if (state == OpState.PULL_FOUNDATION) {
+            if (firstpass) {
+                firstpass = false;
 
                 robot.leftDrive.setDirection(DcMotor.Direction.FORWARD);
                 robot.rightDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -119,14 +136,22 @@ public class AutoV1 extends OpMode {
                 robot.rightDrive.setTargetPosition(inch_to_enc_tick(20.0));
                 robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 robot.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                left_power = right_power = 1.0;
+                left_power = right_power = 0.5;
             }
-        } else if (state == OpState.PULL_FOUNDATION) {
+            if (time>c_time+0.2) {
+                c_time=time;
+                left_power+=0.05;
+                right_power+=0.05;
+                robot.leftDrive.setPower(left_power);
+                robot.rightDrive.setPower(right_power);
+            }
             if ( !robot.leftDrive.isBusy() && !robot.rightDrive.isBusy()) {
-
                 setstate(OpState.PARK);
             }
         } else if (state == OpState.PUSH_FOUNDATION) {
+            if (firstpass) {
+                firstpass = false;
+            }
             if (time>c_time+0.75) {
                 c_time=time;
                 left_power+=0.2;
@@ -135,10 +160,15 @@ public class AutoV1 extends OpMode {
                 robot.rightDrive.setPower(right_power);
             }
             if (!robot.leftDrive.isBusy() && !robot.rightDrive.isBusy()) {
-                robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 setstate(OpState.PARK);
             }
+        } else if (state == OpState.PARK) {
+            if (firstpass) {
+                firstpass = false;
+                robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            }
+
         }
 
         // Send telemetry message to signify robot running;
@@ -146,6 +176,11 @@ public class AutoV1 extends OpMode {
         telemetry.addData("left",  "%.2f", left_power);
         telemetry.addData("right", "%.2f", right_power);
         telemetry.addData("state", state.toString());
+
+        // post loop
+
+        // switch to next state if it's changed
+        state = nextstate;
     }
 
     /*
