@@ -103,8 +103,8 @@ public class AutoV1 extends OpMode {
                 firstpass = false;
                 robot.leftDrive.setDirection(DcMotor.Direction.REVERSE);
                 robot.rightDrive.setDirection(DcMotor.Direction.FORWARD);
-                robot.leftDrive.setTargetPosition(inch_to_enc_tick(30.5));
-                robot.rightDrive.setTargetPosition(inch_to_enc_tick(30.5));
+                robot.leftDrive.setTargetPosition(inch_to_enc_tick(31.5));
+                robot.rightDrive.setTargetPosition(inch_to_enc_tick(31.5));
                 robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 robot.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 left_power = right_power = 1.0;
